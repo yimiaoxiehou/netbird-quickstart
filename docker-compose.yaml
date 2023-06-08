@@ -1,0 +1,61 @@
+version: "3"
+services:
+  #UI dashboard
+  dashboard:
+    build: 
+      context: .
+      args:
+        USE_AUTH0: ""
+        AUTH_AUTHORITY: "https://example.auth0.com"   #edit me
+        AUTH_CLIENT_ID: "example-clientid"   #edit me
+        AUTH_CLIENT_SECRET: ""
+        AUTH_SUPPORTED_SCOPES: "openid profile email api offline_access email_verified"
+        AUTH_AUDIENCE: "https://netbird.example.com"   #edit me
+        NETBIRD_MGMT_API_ENDPOINT: "https://netbird.example.com:33073"   #edit me
+        NETBIRD_MGMT_GRPC_API_ENDPOINT: "https://netbird.example.com:33073"   #edit me
+        NETBIRD_HOTJAR_TRACK_ID: "3192690"
+        AUTH_REDIRECT_URI: ""
+        AUTH_SILENT_REDIRECT_URI: ""
+        NETBIRD_TOKEN_SOURCE: ""
+    ports:
+      - "8000:80"
+
+  # Signal
+  signal:
+    image: netbirdio/signal:latest
+    restart: unless-stopped
+    volumes:
+      - SIGNAL_VOLUMENAME:/var/lib/netbird
+    ports:
+      - 10000:80
+
+  # Management
+  management:
+    image: netbirdio/management:latest
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+    volumes:
+      - MGMT_VOLUMENAME:/var/lib/netbird
+      - ./ssl:/etc/letsencrypt:ro
+      - ./management.json:/etc/netbird/management.json
+    ports:
+      - 33073:33073
+    command: ["--port", "33073", "--log-file", "console"]
+
+  # Coturn
+  coturn:
+    image: coturn/coturn
+    restart: unless-stopped
+    domainname: netbird.example.com
+    volumes:
+      - ./turnserver.conf:/etc/turnserver.conf:ro
+    #      - ./privkey.pem:/etc/coturn/private/privkey.pem:ro
+    #      - ./cert.pem:/etc/coturn/certs/cert.pem:ro
+    network_mode: host
+    command:
+      - -c /etc/turnserver.conf
+
+volumes:
+  MGMT_VOLUMENAME:
+  SIGNAL_VOLUMENAME:

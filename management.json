@@ -1,0 +1,52 @@
+{
+    "Stuns": [
+        {
+            "Proto": "udp",
+            "URI": "stun:netbird.example.com:3478",
+            "Username": "",
+            "Password": null
+        }
+    ],
+    "TURNConfig": {
+        "Turns": [
+            {
+                "Proto": "udp",
+                "URI": "turn:netbird.example.com:3478",
+                "Username": "self",
+                "Password": "l3kHa/aG8CFAMMvSSzpjCgSEtyfZGxFkZ/csOGWeYvw"
+            }
+        ],
+        "CredentialsTTL": "12h",
+        "Secret": "secret",
+        "TimeBasedCredentials": false
+    },
+    "Signal": {
+        "Proto": "http",
+        "URI": "netbird.example.com:10000",
+        "Username": "",
+        "Password": null
+    },
+    "Datadir": "",
+    "HttpConfig": {
+        "Address": "0.0.0.0:33073",
+        "AuthIssuer": "https://example.auth0.com/",
+        "AuthAudience": "https://netbird.example.com",
+        "AuthKeysLocation": "https://example.auth0.com/.well-known/jwks.json",
+        "CertFile": "/etc/letsencrypt/fullchain.pem",
+        "CertKey": "/etc/letsencrypt/privkey.pem",
+        "OIDCConfigEndpoint": "https://example.auth0.com/.well-known/openid-configuration"
+    },
+    "IdpManagerConfig": {
+        "Manager": "none"
+     },
+    "DeviceAuthorizationFlow": {
+        "Provider": "none",
+        "ProviderConfig": {
+          "Audience": "https://netbird.example.com",
+          "Domain": "",
+          "ClientID": "",
+          "TokenEndpoint": "https://example.auth0.com/oauth/token",
+          "DeviceAuthEndpoint": "https://example.auth0.com/oauth/device/code"
+         }
+    }
+}
